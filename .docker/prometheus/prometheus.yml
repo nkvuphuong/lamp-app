@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'prometheus_master'
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'localhost:9090' ]
+
+  - job_name: 'redis-exporter'
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'redis-exporter:9121' ]
+
+#  - job_name: 'rabbitmq'
+#    scrape_interval: 5s
+#    static_configs:
+#      - targets: [ 'rabbitmq:5672' ] # Điều này phải trùng với tên dịch vụ RabbitMQ trong Docker Compose
+#    metrics_path: '/metrics'
+#    scheme: 'http'
+#    basic_auth:
+#      username: 'rabbitusr' # Tên người dùng RabbitMQ
+#      password: 'rabbitpw' # Mật khẩu RabbitMQ
