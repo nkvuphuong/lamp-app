@@ -30,39 +30,39 @@ try {
         /**
          * Publish to Redis queue to create orders
          */
-        $creatingOrderMessages[] = $msg->body;
+        $creatingOrderMessages[] = json_encode($orderData, JSON_THROW_ON_ERROR);
 
         if (count($creatingOrderMessages) >= $redisQueueSize) {
             echo "  [-] Publish to Redis queue to create orders \n";
-            $redisQueueClient->lpush('order.create', json_encode($creatingOrderMessages));
+            $redisQueueClient->lpush('order.create', $creatingOrderMessages);
             $creatingOrderMessages = [];
         }
 
         /**
          * Publish to Redis queue to verify address
          */
-        $verifyingAddressMessages[] = [
+        $verifyingAddressMessages[] = json_encode([
             'uuid' => $orderData['uuid'],
             'shipping_to' => $orderData['shipping_to'],
-        ];
+        ], JSON_THROW_ON_ERROR);
 
         if (count($verifyingAddressMessages) >= $redisQueueSize) {
             echo "  [-] Publish to Redis queue to verify address \n";
-            $redisQueueClient->lpush('order.verify_address', json_encode($verifyingAddressMessages));
+            $redisQueueClient->lpush('order.verify_address', $verifyingAddressMessages);
             $verifyingAddressMessages = [];
         }
 
         /**
          * Publish to Redis queue to download design image
          */
-        $downloadingDesignImageMessages[] = [
+        $downloadingDesignImageMessages[] = json_encode([
             'uuid' => $orderData['uuid'],
             'items' => $orderData['items'],
-        ];
+        ]);
 
         if (count($downloadingDesignImageMessages) >= $redisQueueSize) {
             echo "  [-] Publish to Redis queue to download design image \n";
-            $redisQueueClient->lpush('order.download_design', json_encode($downloadingDesignImageMessages));
+            $redisQueueClient->lpush('order.download_design', $downloadingDesignImageMessages);
             $downloadingDesignImageMessages = [];
         }
 
@@ -73,19 +73,19 @@ try {
 
     if (!empty($creatingOrderMessages)) {
         echo "  [-] Publish to Redis queue to create orders * \n";
-        $redisQueueClient->lpush('order.create', json_encode($creatingOrderMessages));
+        $redisQueueClient->lpush('order.create', $creatingOrderMessages);
         $creatingOrderMessages = [];
     }
 
     if (!empty($verifyingAddressMessages)) {
         echo "  [-] Publish to Redis queue to verify address * \n";
-        $redisQueueClient->lpush('order.verify_address', json_encode($verifyingAddressMessages));
+        $redisQueueClient->lpush('order.verify_address', $verifyingAddressMessages);
         $creatingOrderMessages = [];
     }
 
     if (!empty($downloadingDesignImageMessages)) {
         echo "  [-] Publish to Redis queue to download design image * \n";
-        $redisQueueClient->lpush('order.download_design', json_encode($downloadingDesignImageMessages));
+        $redisQueueClient->lpush('order.download_design', $downloadingDesignImageMessages);
         $creatingOrderMessages = [];
     }
 
