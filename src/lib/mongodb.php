@@ -1,6 +1,6 @@
 <?php
 
-namespace demo\lib;
+namespace src\lib;
 
 use MongoDB\Client;
 use MongoDB\Driver\ServerApi;

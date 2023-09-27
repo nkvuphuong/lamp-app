@@ -1,13 +1,12 @@
 <?php
 
-use demo\lib\rabbit_queue;
 use PhpAmqpLib\Message\AMQPMessage;
 
 require 'init.php';
 
-$queueConnection = new rabbit_queue();
+$queueConnection = new \src\lib\rabbit_queue();
 $channel = $queueConnection->getChannel();
-$routingKey = 'order_queue';
+$routingKey = 'importing_orders';
 echo '[*] Declaring queue' . PHP_EOL;
 $channel->queue_declare($routingKey, false, true, false, false);
 
@@ -20,13 +19,13 @@ $faker = Faker\Factory::create();
 
 
 /**
- * Giả sử có 10 file mỗi file 10k dòng
+ * Giả sử có 10 file trên S3 mỗi file 10k dòng
  */
-for ($fileNum = 0; $fileNum < 10; $fileNum++) {
+for ($fileNum = 0; $fileNum < 1; $fileNum++) {
 
     echo "[*] Importing file #$fileNum" . PHP_EOL;
 
-    for ($i = 0; $i < 10000; $i++) {
+    for ($i = 0; $i < 10; $i++) {
         $order = [
             'uuid' => uuid_create(),
             'seller_id' => rand(1, 1000),

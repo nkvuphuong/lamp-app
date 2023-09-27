@@ -1,6 +1,6 @@
 <?php
 
-namespace demo\lib;
+namespace src\lib;
 
 use PhpAmqpLib;
 use PhpAmqpLib\Channel\AbstractChannel;
@@ -13,7 +13,7 @@ class rabbit_queue
     private PhpAmqpLib\Channel\AMQPChannel $channel;
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
