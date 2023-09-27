@@ -2,15 +2,15 @@
 
 namespace demo\lib;
 
-use PhpAmqpLib;
 use PhpAmqpLib\Channel\AbstractChannel;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Exception;
 
 class rabbit_queue
 {
     private AMQPStreamConnection $connection;
-    private PhpAmqpLib\Channel\AMQPChannel $channel;
+    private AMQPChannel $channel;
 
     /**
      * @throws Exception
@@ -24,9 +24,9 @@ class rabbit_queue
     }
 
     /**
-     * @return AbstractChannel|\PhpAmqpLib\Channel\AMQPChannel
+     * @return AbstractChannel|AMQPChannel
      */
-    public function getChannel(): \PhpAmqpLib\Channel\AMQPChannel|AbstractChannel
+    public function getChannel(): AMQPChannel|AbstractChannel
     {
         return $this->channel;
     }
@@ -36,7 +36,7 @@ class rabbit_queue
      */
     public function __destruct()
     {
-        echo 'Close connection' . PHP_EOL;
+        echo 'Rabbit connection closed' . PHP_EOL;
         $this->channel->close();
         $this->connection->close();
     }

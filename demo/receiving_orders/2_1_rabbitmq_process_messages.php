@@ -58,7 +58,7 @@ try {
         $downloadingDesignImageMessages[] = json_encode([
             'uuid' => $orderData['uuid'],
             'items' => $orderData['items'],
-        ]);
+        ], JSON_THROW_ON_ERROR);
 
         if (count($downloadingDesignImageMessages) >= $redisQueueSize) {
             echo "  [-] Publish to Redis queue to download design image \n";
