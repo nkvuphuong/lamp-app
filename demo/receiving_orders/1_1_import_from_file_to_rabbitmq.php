@@ -21,11 +21,11 @@ $faker = Faker\Factory::create();
 /**
  * Giả sử có 10 file trên S3 mỗi file 10k dòng
  */
-for ($fileNum = 0; $fileNum < 1; $fileNum++) {
+for ($fileNum = 0; $fileNum < 10; $fileNum++) {
 
     echo "[*] Importing file #$fileNum" . PHP_EOL;
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 100; $i++) {
         $order = [
             'uuid' => uuid_create(),
             'seller_id' => rand(1, 1000),
