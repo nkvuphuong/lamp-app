@@ -16,7 +16,7 @@ try {
 
     echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
-    $creatingOrderMessages = $verifyingAddressMessages = $downloadingDesignImageMessages = [];
+    $creatingOrderMessages = [];
 
     $callback = static function (PhpAmqpLib\Message\AMQPMessage $msg) use (&$creatingOrderMessages, &$verifyingAddressMessages, &$downloadingDesignImageMessages, $redisQueueClient) {
         $redisQueueSize = 10;
@@ -39,34 +39,6 @@ try {
             $creatingOrderMessages = [];
         }
 
-        /**
-         * Publish to Redis queue to verify address
-         */
-        $verifyingAddressMessages[] = json_encode([
-            'uuid' => $orderData['uuid'],
-            'shipping_to' => $orderData['shipping_to'],
-        ], JSON_THROW_ON_ERROR);
-
-        if (count($verifyingAddressMessages) >= $redisQueueSize) {
-            echo "  [-] Publish to Redis queue to verify address \n";
-            $redisQueueClient->lpush('order.verify_address', $verifyingAddressMessages);
-            $verifyingAddressMessages = [];
-        }
-
-        /**
-         * Publish to Redis queue to download design image
-         */
-        $downloadingDesignImageMessages[] = json_encode([
-            'uuid' => $orderData['uuid'],
-            'items' => $orderData['items'],
-        ], JSON_THROW_ON_ERROR);
-
-        if (count($downloadingDesignImageMessages) >= $redisQueueSize) {
-            echo "  [-] Publish to Redis queue to download design image \n";
-            $redisQueueClient->lpush('order.download_design', $downloadingDesignImageMessages);
-            $downloadingDesignImageMessages = [];
-        }
-
         sleep($sleepingTime);
         echo " [x] Done: " . date('c') . "\n";
         $msg->ack();
@@ -75,18 +47,6 @@ try {
     if (!empty($creatingOrderMessages)) {
         echo "  [-] Publish to Redis queue to create orders * \n";
         $redisQueueClient->lpush('order.create', $creatingOrderMessages);
-        $creatingOrderMessages = [];
-    }
-
-    if (!empty($verifyingAddressMessages)) {
-        echo "  [-] Publish to Redis queue to verify address * \n";
-        $redisQueueClient->lpush('order.verify_address', $verifyingAddressMessages);
-        $creatingOrderMessages = [];
-    }
-
-    if (!empty($downloadingDesignImageMessages)) {
-        echo "  [-] Publish to Redis queue to download design image * \n";
-        $redisQueueClient->lpush('order.download_design', $downloadingDesignImageMessages);
         $creatingOrderMessages = [];
     }
 
