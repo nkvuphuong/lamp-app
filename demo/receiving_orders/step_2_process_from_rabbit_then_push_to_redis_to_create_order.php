@@ -34,7 +34,7 @@ try {
         $creatingOrderMessages[] = json_encode($orderData, JSON_THROW_ON_ERROR);
 
         if (count($creatingOrderMessages) >= $redisQueueSize) {
-            echo "  [-] Publish to Redis queue to create orders \n";
+            echo "  [-] Published to Redis queue to create orders \n";
             $redisQueueClient->lpush('order.create', $creatingOrderMessages);
             $creatingOrderMessages = [];
         }
@@ -45,7 +45,7 @@ try {
     };
 
     if (!empty($creatingOrderMessages)) {
-        echo "  [-] Publish to Redis queue to create orders * \n";
+        echo "  [-] Published to Redis queue to create orders * \n";
         $redisQueueClient->lpush('order.create', $creatingOrderMessages);
         $creatingOrderMessages = [];
     }

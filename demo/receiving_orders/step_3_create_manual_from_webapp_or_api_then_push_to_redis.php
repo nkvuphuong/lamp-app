@@ -14,7 +14,7 @@ try {
 $faker = Faker\Factory::create();
 
 
-for ($i = 0; $i < 100000; $i++) {
+for ($i = 0; $i < 1000; $i++) {
     $order = [
         'uuid' => uuid_create(),
         'seller_id' => rand(1, 1000),
@@ -39,24 +39,9 @@ for ($i = 0; $i < 100000; $i++) {
         ];
     }
 
-    echo "[+] Publishing order: #{$order['uuid']}" . PHP_EOL;
+    echo "[+] Published order: #{$order['uuid']}" . PHP_EOL;
 
     $creatingOrderMessages = json_encode($order, JSON_THROW_ON_ERROR);
     $redisQueueClient->lpush('order.create', [$creatingOrderMessages]);
-    echo "  [-] Publish to Redis queue to create orders \n";
-
-    $verifyingAddressMessage = json_encode([
-        'uuid' => $order['uuid'],
-        'shipping_to' => $order['shipping_to'],
-    ], JSON_THROW_ON_ERROR);
-    $redisQueueClient->lpush('order.verify_address', [$verifyingAddressMessage]);
-    echo "  [-] Publish to Redis queue to verify address \n";
-
-    $downloadingDesignImageMessages = json_encode([
-        'uuid' => $order['uuid'],
-        'items' => $order['items'],
-    ], JSON_THROW_ON_ERROR);
-    $redisQueueClient->lpush('order.download_design', [$downloadingDesignImageMessages]);
-    echo "  [-] Publish to Redis queue to download design image \n";
 }
 
