@@ -46,10 +46,10 @@ class redis
 
     /**
      * @param $key
-     * @return void
+     * @return string|null
      */
     public function load($key)
     {
-        $this->client->get($key);
+        return $this->client->get($key);
     }
 }

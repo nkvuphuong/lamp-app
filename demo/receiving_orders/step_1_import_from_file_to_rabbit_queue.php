@@ -22,7 +22,7 @@ $faker = Faker\Factory::create();
 /**
  * Giả sử có 10 file trên S3 mỗi file 10k dòng
  */
-for ($fileNum = 0; $fileNum < 10; $fileNum++) {
+for ($fileNum = 0; $fileNum < 5; $fileNum++) {
 
     echo "[*] Importing file #$fileNum" . PHP_EOL;
 
