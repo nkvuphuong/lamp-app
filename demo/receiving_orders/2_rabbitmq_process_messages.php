@@ -1,9 +1,12 @@
 <?php
+
+use demo\lib\rabbit_queue;
+
 require 'init.php';
 
 try {
     $routingKey = 'importing_orders';
-    $rabbitmqConnection = new \src\lib\rabbit_queue();
+    $rabbitmqConnection = new rabbit_queue();
     $channel = $rabbitmqConnection->getChannel();
 
     $redisQueueClient = (new \demo\lib\redis())->getClient();

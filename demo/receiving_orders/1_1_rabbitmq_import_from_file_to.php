@@ -1,10 +1,11 @@
 <?php
 
+use demo\lib\rabbit_queue;
 use PhpAmqpLib\Message\AMQPMessage;
 
 require 'init.php';
 
-$queueConnection = new \src\lib\rabbit_queue();
+$queueConnection = new rabbit_queue();
 $channel = $queueConnection->getChannel();
 $routingKey = 'importing_orders';
 echo '[*] Declaring queue' . PHP_EOL;
