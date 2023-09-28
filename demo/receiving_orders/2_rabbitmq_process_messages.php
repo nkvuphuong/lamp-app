@@ -1,8 +1,6 @@
 <?php
 require 'init.php';
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-
 try {
     $routingKey = 'importing_orders';
     $rabbitmqConnection = new \src\lib\rabbit_queue();
