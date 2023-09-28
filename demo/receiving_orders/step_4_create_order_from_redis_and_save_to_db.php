@@ -15,7 +15,7 @@ try {
 
             sleep($sleepTime);
 
-            echo "  [-] Insert ordered {$jobData['uuid']} to DB ($sleepTime\s)\n";
+            echo "  [+] Insert ordered {$jobData['uuid']} to DB ($sleepTime\s)\n";
 
             /**
              * Publish to Redis queue to verify address
@@ -25,7 +25,7 @@ try {
                 'shipping_to' => $jobData['shipping_to'],
             ], JSON_THROW_ON_ERROR);
             $redisClient->lpush('order.verify_address', [$verifyingAddressMessage]);
-            echo "  [-] Published to Redis queue to verify address \n";
+            echo "      [-] Published to Redis queue to verify address \n";
 
             /**
              * Publish to Redis queue to download design image
@@ -35,7 +35,7 @@ try {
                 'items' => $jobData['items'],
             ], JSON_THROW_ON_ERROR);
             $redisClient->lpush('order.download_design', $downloadingDesignImageMessage);
-            echo "  [-] Published to Redis queue to download design image \n";
+            echo "      [-] Published to Redis queue to download design image \n";
 
         } else {
             // Nếu hàng đợi trống, chờ một khoảng thời gian trước khi thử lại
