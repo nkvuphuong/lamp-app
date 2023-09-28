@@ -14,7 +14,7 @@ try {
 
             sleep($sleepTime);
 
-            echo "  [-] Insert order {$jobData['uuid']} to DB ($sleepTime\s)";
+            echo "  [-] Insert order {$jobData['uuid']} to DB ($sleepTime\s)\n";
 
         } else {
             // Nếu hàng đợi trống, chờ một khoảng thời gian trước khi thử lại
