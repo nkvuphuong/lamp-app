@@ -32,6 +32,27 @@ class rabbit_queue
     }
 
     /**
+     * @return int
+     * @throws \JsonException
+     */
+    static function checkConsumer()
+    {
+        $res = file_get_contents("http://{$_ENV['RABBITMQ_HOST']}:{$_ENV['RABBITMQ_USER']}@{$_ENV['RABBITMQ_PASS']}:{$_ENV['RABBITMQ_PORT']}/api/queues");
+
+        $maxSize = 100;
+
+        if ($stats = json_decode($res, 1, 512, JSON_THROW_ON_ERROR)) {
+            $messagesReady = $stats[0]['messages_ready'];
+            $availableConsumers = $stats[0]['consumers'];
+            $maxConsumers = ceil($messagesReady / $maxSize);
+
+            return $maxConsumers - $availableConsumers;
+        }
+
+        return 0;
+    }
+
+    /**
      * @throws Exception
      */
     public function __destruct()
