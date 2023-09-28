@@ -1,5 +1,5 @@
 1. Cài docker desktop (https://docs.docker.com/desktop/)
-2. Clone git demo project: https://github.com/nkvuphuong/lamp-app
+2. Clone git demo project: (https://github.com/nkvuphuong/lamp-app)
 3. Tại thư mục gốc project chạy lệnh: "docker compose up -d --build"
 4. Mở Docker Desktop -> Containers -> php-apache -> Mở tab "Terminal" -> Chạy lệnh "composer install"
 5. Source demo nằm trong thư mục "/demo"
