@@ -2,6 +2,7 @@
 
 namespace demo\lib;
 
+use Illuminate\Support\Str;
 use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -37,19 +38,31 @@ class rabbit_queue
      */
     static function checkConsumer()
     {
-        $res = file_get_contents("http://{$_ENV['RABBITMQ_HOST']}:{$_ENV['RABBITMQ_USER']}@{$_ENV['RABBITMQ_PASS']}:{$_ENV['RABBITMQ_PORT']}/api/queues");
+        $rs = 0;
+
+        $redis = new redis();
+
+        $cacheName = Str::slug(__FILE__ . __FUNCTION__);
+
+        $res = file_get_contents($url = "http://{$_ENV['RABBITMQ_USER']}:{$_ENV['RABBITMQ_PASS']}@{$_ENV['RABBITMQ_HOST']}:15672/api/queues");
 
         $maxSize = 100;
 
-        if ($stats = json_decode($res, 1, 512, JSON_THROW_ON_ERROR)) {
+        $cacheVal = $redis->load($cacheName);
+
+        if (empty($cacheVal) && $stats = json_decode($res, 1, 512, JSON_THROW_ON_ERROR)) {
             $messagesReady = $stats[0]['messages_ready'];
             $availableConsumers = $stats[0]['consumers'];
             $maxConsumers = ceil($messagesReady / $maxSize);
 
-            return $maxConsumers - $availableConsumers;
+            $rs = $maxConsumers - $availableConsumers;
+        } else {
+            $rs = $cacheVal;
         }
 
-        return 0;
+        $redis->save($cacheName, $rs, 10);
+
+        return $rs;
     }
 
     /**

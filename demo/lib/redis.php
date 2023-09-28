@@ -28,4 +28,28 @@ class redis
     {
         return $this->client;
     }
+
+    /**
+     * @param $key
+     * @param $value
+     * @param $expired
+     * @return void
+     */
+    public function save($key, $value, $expired = 0)
+    {
+        $this->client->set($key, $value);
+
+        if (!empty($expired)) {
+            $this->client->expire($key, $expired);
+        }
+    }
+
+    /**
+     * @param $key
+     * @return void
+     */
+    public function load($key)
+    {
+        $this->client->get($key);
+    }
 }
