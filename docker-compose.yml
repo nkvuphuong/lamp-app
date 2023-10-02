@@ -62,6 +62,31 @@ services:
         networks:
             - 'global'
 
+    postgres:
+        image: postgres
+        container_name: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: pgsqlusr
+            POSTGRES_PASSWORD: pgsqlpw
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./.docker/mount/database/postgresql:/var/lib/postgresql
+        networks:
+            - 'global'
+
+    postgres-exporter:
+        image: bitnami/postgres-exporter:latest
+        container_name: postgres-exporter
+        environment:
+            DATA_SOURCE_NAME: "postgresql://pgsqlusr:pgsqlpw@postgres:5432/postgres?sslmode=disable"
+        restart: always
+        ports:
+            - "9187:9187"
+        networks:
+            - 'global'
+
     rabbitmq:
         image: rabbitmq:3.12-management
         container_name: rabbitmq-management
