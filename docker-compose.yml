@@ -148,6 +148,20 @@ services:
         networks:
             - 'global'
 
+    grafana:
+        image: grafana/grafana-oss:latest
+        container_name: grafana
+        restart: unless-stopped
+        environment:
+            GF_SECURITY_ADMIN_USER: gfusr
+            GF_SECURITY_ADMIN_PASSWORD: gfpw
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./.docker/mount/grafana:/var/lib/grafana
+        networks:
+            - 'global'
+
 networks:
     global:
         driver: bridge
