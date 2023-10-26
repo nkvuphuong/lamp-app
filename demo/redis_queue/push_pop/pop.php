@@ -11,6 +11,8 @@ try {
         'port' => 6379,
         'read_write_timeout' => 0
     ]);
+    $qname = 'myqueue';
+    $qname_retry = "{$qname}_retry";
 
     /*if ($client->isConnected())*/ {
 
@@ -18,13 +20,22 @@ try {
 
         while (true) {
             // Lấy công việc từ đầu hàng đợi
-            $jobData = $client->rpop('myqueue');
+            $jobData = $client->rpoplpush($qname, $qname_retry);
 
             if ($jobData !== null) {
+
                 // Xử lý công việc ở đây
                 echo "[+] Processing job: $jobData\n";
-//                sleep(2);
+                sleep(random_int(0, 2));
+
+                if (random_int(0,10) === 0) {
+                    throw new Exception('Test Exception');
+                }
+
                 echo "[-] Processed: $jobData\n";
+
+                $client->lrem($qname_retry, 1, $jobData);
+
                 echo "==============================================\n";
             } else {
                 // Nếu hàng đợi trống, chờ một khoảng thời gian trước khi thử lại

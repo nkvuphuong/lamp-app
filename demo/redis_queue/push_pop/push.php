@@ -20,7 +20,7 @@ try {
 
 
     $messages = [];
-    for ($i = 0; $i <= 200000; $i++) {
+    for ($i = 0; $i <= 100; $i++) {
         $messages[] = "Msg No.$i";
     }
 
