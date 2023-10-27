@@ -30,8 +30,6 @@ while (true) {
     sleep(10);
 }
 
-
-
 echo "[*] END";
 
 
